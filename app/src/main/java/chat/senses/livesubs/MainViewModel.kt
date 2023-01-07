@@ -11,6 +11,7 @@ import kotlinx.coroutines.channels.trySendBlocking
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class MainViewModel : ViewModel() {
@@ -39,7 +40,7 @@ class MainViewModel : ViewModel() {
             }
         }
 
-    val deviceConnected = MutableStateFlow<Boolean>(false)
+    val deviceConnected = MutableStateFlow(false)
 
     private val glassConnectionFlow: Flow<Boolean> = callbackFlow {
         val connectListener: OnGlassDeviceConnectListener by lazy {
@@ -60,13 +61,17 @@ class MainViewModel : ViewModel() {
         awaitClose { RKGlassDevice.getInstance().deInit() }
     }
 
-    val displayCount = MutableStateFlow<Int>(LiveSubtitlesApplication.displayManager.displays.size)
+    val displayCount = MutableStateFlow(LiveSubtitlesApplication.displayManager.displays.size)
 
     init {
+        connectGlass()
+    }
+
+    private fun connectGlass() {
         viewModelScope.launch {
             glassConnectionFlow.collect {
                 deviceConnected.value = it
-                Log.i(TAG, "${LiveSubtitlesApplication.displayManager.displays.size}")
+//                Log.i(TAG, "${LiveSubtitlesApplication.displayManager.displays.size}")
                 displayCount.value = LiveSubtitlesApplication.displayManager.displays.size
             }
         }

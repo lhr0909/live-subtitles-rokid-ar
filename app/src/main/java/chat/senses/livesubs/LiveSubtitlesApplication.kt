@@ -22,7 +22,7 @@ class LiveSubtitlesApplication : Application() {
         super.onCreate()
         INSTANCE = this
         appContext = applicationContext
-        displayManager = getSystemService(Context.DISPLAY_SERVICE) as DisplayManager
-        Log.i(TAG, "${displayManager.displays.size}")
+        displayManager = applicationContext.getSystemService(Context.DISPLAY_SERVICE) as DisplayManager
+//        Log.i(TAG, "${displayManager.displays.size}")
     }
 }
