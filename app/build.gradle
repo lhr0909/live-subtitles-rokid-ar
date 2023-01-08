@@ -65,6 +65,8 @@ dependencies {
     //This SDK is based on glassdevice-phone sdk, provide offline-voice-recognize usage.
     implementation "com.rokid.axr:glassvoice-phone:$rokid_axr_version"
 
+    implementation "com.microsoft.onnxruntime:onnxruntime-android:$onnx_version"
+
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'

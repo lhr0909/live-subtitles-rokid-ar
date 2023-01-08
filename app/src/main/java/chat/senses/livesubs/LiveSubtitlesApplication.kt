@@ -3,6 +3,7 @@ package chat.senses.livesubs
 import android.app.Application
 import android.content.Context
 import android.hardware.display.DisplayManager
+import android.media.AudioManager
 import android.util.Log
 
 class LiveSubtitlesApplication : Application() {
@@ -12,6 +13,7 @@ class LiveSubtitlesApplication : Application() {
         lateinit var INSTANCE: LiveSubtitlesApplication
         lateinit var appContext: Context
         lateinit var displayManager: DisplayManager
+        lateinit var audioManager: AudioManager
     }
 
     /**
@@ -23,6 +25,9 @@ class LiveSubtitlesApplication : Application() {
         INSTANCE = this
         appContext = applicationContext
         displayManager = applicationContext.getSystemService(Context.DISPLAY_SERVICE) as DisplayManager
-//        Log.i(TAG, "${displayManager.displays.size}")
+        audioManager = applicationContext.getSystemService(Context.AUDIO_SERVICE) as AudioManager
+        Log.i(TAG, "${audioManager.microphones.map { 
+            it.description
+        }}")
     }
 }

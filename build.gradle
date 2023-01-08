@@ -3,6 +3,7 @@ buildscript {
         compose_ui_version = '1.3.2'
         rokid_axr_version = '1.0.4'
         ktor_version = '2.2.1'
+        onnx_version = '1.13.1'
     }
 }// Top-level build file where you can add configuration options common to all sub-projects/modules.
 plugins {
