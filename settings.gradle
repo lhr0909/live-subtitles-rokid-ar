@@ -2,18 +2,18 @@ pluginManagement {
     repositories {
         gradlePluginPortal()
         google()
+        mavenCentral()
         //Rokid maven is required.
         maven { url 'https://maven.rokid.com/repository/maven-public/'}
-        mavenCentral()
     }
 }
 dependencyResolutionManagement {
     repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
     repositories {
         google()
+        mavenCentral()
         //Rokid maven is required.
         maven { url 'https://maven.rokid.com/repository/maven-public/'}
-        mavenCentral()
     }
 }
 rootProject.name = "Live Subtitles"

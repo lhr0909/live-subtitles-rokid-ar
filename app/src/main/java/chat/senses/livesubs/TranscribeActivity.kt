@@ -6,10 +6,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
@@ -64,21 +61,28 @@ class TranscribeActivity : ComponentActivity() {
         }
 
         setContent {
-            val speaking by viewModel.isSpeaking.collectAsState()
+            val transcription by viewModel.transcription.collectAsState()
+            val prob by viewModel.speakingProbability.collectAsState()
             LiveSubtitlesTheme {
                 // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
                 ) {
-                    Row(
+                    Column(
                         modifier = Modifier.fillMaxWidth()
                     ) {
+                        Text(
+                            modifier = Modifier.padding(10.dp),
+                            style = Typography.h5,
+                            textAlign = TextAlign.Left,
+                            text = "${prob}",
+                        )
                         Text(
                             modifier = Modifier.padding(20.dp),
                             style = Typography.h2,
                             textAlign = TextAlign.Center,
-                            text = "${speaking}",
+                            text = "${transcription}",
                         )
                     }
                 }
