@@ -81,6 +81,8 @@ class TranscribeViewModel : ViewModel() {
         .build()
 
     private var ortEnv: OrtEnvironment = OrtEnvironment.getEnvironment()
+    private var hTensor = OnnxTensor.createTensor(ortEnv, FloatBuffer.allocate(2 * 1 * 64), longArrayOf(2, 1, 64))
+    private var cTensor = OnnxTensor.createTensor(ortEnv, FloatBuffer.allocate(2 * 1 * 64), longArrayOf(2, 1, 64))
     private var ortSession: OrtSession? = null
 
     val speakingProbability = MutableStateFlow(0f)
@@ -112,7 +114,7 @@ class TranscribeViewModel : ViewModel() {
             val prob = runVAD(buffer, size)
             speakingProbability.value = prob
 
-            if (prob > 0.15f) {
+            if (prob > 0.5f) {
                 hasVoice = true
                 consecutiveSilence = 0
                 buffers.add(buffer)
@@ -140,6 +142,7 @@ class TranscribeViewModel : ViewModel() {
                     consecutiveSilence = 0
                     hasVoice = false
                     buffers.clear()
+                    resetVADState()
                 }
             }
         }
@@ -192,12 +195,15 @@ class TranscribeViewModel : ViewModel() {
         }
     }
 
+    private fun resetVADState() {
+        hTensor = OnnxTensor.createTensor(ortEnv, FloatBuffer.allocate(2 * 1 * 64), longArrayOf(2, 1, 64))
+        cTensor = OnnxTensor.createTensor(ortEnv, FloatBuffer.allocate(2 * 1 * 64), longArrayOf(2, 1, 64))
+    }
+
     private fun runVAD(inputData: FloatBuffer, size: Int): Float {
         val inputShape = longArrayOf(1, size.toLong()) // have to re-type numbers because long
         val inputTensor = OnnxTensor.createTensor(ortEnv, inputData, inputShape)
         val sampleRateTensor = OnnxTensor.createTensor(ortEnv, LongBuffer.wrap(longArrayOf(SAMPLE_RATE.toLong())), longArrayOf(1))
-        val hTensor = OnnxTensor.createTensor(ortEnv, FloatBuffer.allocate(2 * 1 * 64), longArrayOf(2, 1, 64))
-        val cTensor = OnnxTensor.createTensor(ortEnv, FloatBuffer.allocate(2 * 1 * 64), longArrayOf(2, 1, 64))
         val input = mutableMapOf(
             "input" to inputTensor,
             "sr" to sampleRateTensor,
@@ -209,6 +215,8 @@ class TranscribeViewModel : ViewModel() {
 
         // FIXME: not sure why I have to multiply by 8 here, the numbers are much smaller
         val prob = (output?.get(0)?.value as Array<FloatArray>)[0][0]
+        hTensor = OnnxTensor.createTensor(ortEnv, (output.get(1))?.value as Array<Array<FloatArray>>)
+        cTensor = OnnxTensor.createTensor(ortEnv, (output.get(2))?.value as Array<Array<FloatArray>>)
 
         return prob
     }

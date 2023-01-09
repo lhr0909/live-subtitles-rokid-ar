@@ -66,7 +66,10 @@ dependencies {
     //This SDK is based on glassdevice-phone sdk, provide offline-voice-recognize usage.
     implementation "com.rokid.axr:glassvoice-phone:$rokid_axr_version"
 
+    // ONNX format OK
     implementation "com.microsoft.onnxruntime:onnxruntime-android:$onnx_version"
+    // requires ORT format
+//    implementation "com.microsoft.onnxruntime:onnxruntime-mobile:$onnx_version"
 
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
